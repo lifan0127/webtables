@@ -1,23 +1,31 @@
-# -*- coding: utf-8 -*-
+import re
+import urllib2
 
-class Library:
-    @classmethod
-    def url_open(cls, url):
-        url = Library.url_escape(url)
-        print url
+class Library:   
+    # patterns for URL
+    patt_web = re.compile(r'^(http://(.*))$', re.I)
+    patt_file = re.compile(r'^file://(.*)$', re.I)
     
     @classmethod
-    def url_escape(cls, url):
-        return url
-    
-Library.url_open('http://en.wikipedia.org/wiki/Freedom_Road_Socialist_Organization_(Fight_Back!)')
+    def urlopen(cls, url):       
+        m_web = cls.patt_web.match(url)
+        m_file = cls.patt_file.match(url)
+        
+        if m_web:
+            headers = {'User-Agent': 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'}
+            request = urllib2.Request(m_web.group(1), None, headers)
 
-from webtables.core.Filter import *
+            return urllib2.urlopen(request).read()
+        elif m_file:
+            print m_file.group(1)
+            fhndl = open(m_file.group(1), 'r')
+            fcontent = fhndl.read()
+            fhndl.close()
 
-url = 'http://en.wikipedia.org/wiki/Freedom_Road_Socialist_Organization_(Fight_Back!)'
-url = 'http://en.wikipedia.org/wiki/Freakazoid!_episode_list'
-url = 'http://en.wikipedia.org/wiki/!!!Fuck_You!!!'
-filter = Filter()
+            return fcontent
+        else:
+            raise IOException, 'Invalid URL'
 
-html = filter.urlopen(url)
-print html
+    @classmethod
+    def fixhtml(cls, url):
+        pass
