@@ -1,6 +1,6 @@
 # This class recognizes Tables in HTML code.
 
-from webtables.library.BeautifulSoup.BeautifulSoup import BeautifulSoup
+from webtables.packages.BeautifulSoup.BeautifulSoup import BeautifulSoup
 import re
 import urllib2
 
