@@ -11,14 +11,9 @@ class WikipediaExtractor():
         dom = minidom.parseString(str)
         
         rows = dom.getElementsByTagName('tr')
-
         
-        print '==>', table_soup.get('class'), table_soup.get('id')
-
         if table_soup.get('class') == 'navbox': return None
         if table_soup.get('class') == 'toc': return None
-        # wrong elimination
-        if table_soup.get('class') == 'nowraplinks collapsible autocollapse': return None
         
         str = table_soup.prettify()
                        
@@ -27,12 +22,13 @@ class WikipediaExtractor():
         rows = dom.getElementsByTagName("tr")
         
         for tr in rows:
-            #tds = tr.getElementsByTagName("td")
-            tags = [e for e in tr.childNodes if isinstance(e, minidom.Element)]
-            tags = filter(lambda x: x.tagName in ['td', 'th'], tags) 
+            cells = [e for e in tr.childNodes if isinstance(e, minidom.Element)]
+            cells = filter(lambda x: x.tagName in ['td', 'th'], cells)
             
-            for td in tags:
-                value = self.getCellValue(td)            
+            for cell in cells:
+                value = self.getCellValue(cell)
+                print value, '\t',
+                """
                 try:
                     print value, '\t',
                 except UnicodeEncodeError:
@@ -40,6 +36,7 @@ class WikipediaExtractor():
                     #value = value.encode('utf-8', 'replace')
                     #print '{ErrEncode}', value
                     print value, '\t',
+                """
             print
             
     def getCellValue(self, td_elem):
