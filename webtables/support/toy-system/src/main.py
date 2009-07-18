@@ -6,10 +6,16 @@ from webtables.packages.BeautifulSoup.BeautifulSoup import BeautifulSoup
 
 html = Library.urlopen('file://../resources/htmls/List_of_countries_and_outlying_territories_by_area.html')
 
+import re
+
+html = re.sub('&#160;', ' ', html)
 
 soup = BeautifulSoup(html)
 
-tables_soup = soup.findAll('table')
+#div_soup = soup.find('div', {'id': 'bodyContent'})
+div_soup = soup.find("div", {"id": "bodyContent"})
+
+tables_soup = div_soup.findAll('table', recursive=False)
 
 from webtables.extractor.wikipedia.WikipediaExtractor import *
 
